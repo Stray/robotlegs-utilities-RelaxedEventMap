@@ -10,10 +10,12 @@ package org.robotlegs.base {
 	public class RelaxedEventMap extends EventMap implements IRelaxedEventMap {
 		
 		protected var eventsReceivedByClass:Dictionary;
+		protected var emptyListeners:Array;
 		
 		public function RelaxedEventMap(eventDispatcher:IEventDispatcher) {
 			super(eventDispatcher);
 			eventsReceivedByClass = new Dictionary();
+			emptyListeners = [];
 		} 
 		
 		public function mapRelaxedListener(type:String, listener:Function, eventClass:Class = null, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = true):void
@@ -29,6 +31,13 @@ package org.robotlegs.base {
 			
 			mapListener(this.eventDispatcher, type, listener, eventClass, useCapture, priority, useWeakReference);
 		}
+		
+		public function rememberEvent(type:String, eventClass:Class = null):void
+		{
+			var emptyListener:Function = function():void { }; 
+			emptyListeners.push(emptyListener);
+			mapListener(this.eventDispatcher, type, emptyListener, eventClass);
+		}
 
 		override protected function routeEventToListener(event:Event, listener:Function, originalEventClass:Class):void
 		{
@@ -36,7 +45,16 @@ package org.robotlegs.base {
 			{
 				eventsReceivedByClass[originalEventClass] ||= new Dictionary();
 				eventsReceivedByClass[originalEventClass][event.type] = event;
-				listener(event);
+				                    
+				if(emptyListeners.indexOf(listener) == -1)
+				{
+					listener(event);
+				}
+				else
+				{
+					unmapListener(this.eventDispatcher, event.type, listener, originalEventClass);
+					emptyListeners.splice(emptyListeners.indexOf(listener), 1);
+				}
 			}
 		}
 

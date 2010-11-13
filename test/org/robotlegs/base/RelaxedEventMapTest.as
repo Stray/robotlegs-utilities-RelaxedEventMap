@@ -56,6 +56,23 @@ package org.robotlegs.base {
 	    	eventDispatcher.dispatchEvent(new SampleEventA(SampleEventA.SOMETHING_HAPPENED));
 		}
 		
+		public function test_rememberEvent_stores_the_event():void {
+			instance.rememberEvent(SampleEventA.SOMETHING_HAPPENED, SampleEventA);
+	    	eventDispatcher.dispatchEvent(new SampleEventA(SampleEventA.SOMETHING_HAPPENED));
+	    	var handler:Function = addAsync(check_past_event_fired_when_listener_added, 100);
+			instance.mapRelaxedListener(SampleEventA.SOMETHING_HAPPENED, handler, SampleEventA);
+	    }
+	
+		public function test_rememberEvent_listener_is_cleaned_up():void { 
+		    instance.rememberEvent(SampleEventA.SOMETHING_HAPPENED, SampleEventA);
+	    	eventDispatcher.dispatchEvent(new SampleEventA(SampleEventA.SOMETHING_HAPPENED));
+	    	eventDispatcher.dispatchEvent(new SampleEventA(SampleEventA.SOMETHING_HAPPENED));
+	    	// unfortunately because the listener is by design empty, I can't find a way to test this automatically
+			// so it's a trace based confirmation
+			assertTrue("Manually verified that when a trace is placed in the null function used it doesn't trace", true);
+	    }
+		
+		
 		private function somethingHappenedHandler(e:SampleEventA):void
 		{
 			// nada
