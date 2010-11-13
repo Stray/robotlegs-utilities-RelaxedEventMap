@@ -51,7 +51,7 @@ You can do this in your context startup, or in a dedicated bootstrap Command.
 	relaxedEventMap.mapRelaxedListener(SomeDataEvent.DATA_SET_UPDATED, function():void{}, SomeDataEvent);
        
 
-Where you want to ensure the mediator receives the event, even if onRegister fires after it has been fired.
+Where you want to ensure the mediator receives the event, even if onRegister runs _after_ it has been fired.
 Note that the parameters are similar to mapListener, but the dispatcher is always the shared eventDispatcher.
     
 	// first - inject the relaxedEventMap
