@@ -5,7 +5,7 @@ public interface IRelaxedEventContext
 {
 	function get relaxedEventMap():IRelaxedEventMap;
 	
-	function set relaxedEventmap(value:IRelaxedEventMap):void;
+	function set relaxedEventMap(value:IRelaxedEventMap):void;
 	
 }
 
