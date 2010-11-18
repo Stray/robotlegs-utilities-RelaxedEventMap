@@ -50,11 +50,7 @@ package org.robotlegs.base {
 				{
 					listener(event);
 				}
-				else
-				{
-					unmapListener(this.eventDispatcher, event.type, listener, originalEventClass);
-					emptyListeners.splice(emptyListeners.indexOf(listener), 1);
-				}
+				
 			}
 		}
 

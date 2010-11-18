@@ -45,10 +45,10 @@ In your context:
 	}
 	
 
-It is also necessary to add a dummy handler for any events that aren't being listened to on the relaxedEventMap elsewhere.
+It is also necessary to add a dummy handler to tell the relaxedEventMap to pick up this event.
 You can do this in your context startup, or in a dedicated bootstrap Command.                            
 
-	// using a dedicated method that creates an empty listener and cleans it up for you
+	// using a dedicated method that creates an empty listener for you
 	relaxedEventMap.rememberEvent(SomeDataEvent.DATA_SET_UPDATED, SomeDataEvent);
     
 	// or manually - for example so you can trace or log the event in the function passed here
