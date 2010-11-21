@@ -49,13 +49,20 @@ package org.robotlegs.base {
 	    	assertEquals('event is correct type', SampleEventA.SOMETHING_HAPPENED, e.type);
 	    }
 		
-		public function test_unmappedRelaxedListener():void {
+		public function test_unmappedListener():void {
 			var handlerThatShouldNotRun:Function = addAsync(failIfFired, 100, correctFailHandler);
 	    	instance.mapRelaxedListener(SampleEventA.SOMETHING_HAPPENED, handlerThatShouldNotRun, SampleEventA);
 			instance.unmapListener(eventDispatcher, SampleEventA.SOMETHING_HAPPENED, handlerThatShouldNotRun, SampleEventA);
 	    	eventDispatcher.dispatchEvent(new SampleEventA(SampleEventA.SOMETHING_HAPPENED));
 		}
 		
+		 public function test_unmappedRelaxedListener():void {
+			var handlerThatShouldNotRun:Function = addAsync(failIfFired, 100, correctFailHandler);
+	    	instance.mapRelaxedListener(SampleEventA.SOMETHING_HAPPENED, handlerThatShouldNotRun, SampleEventA);
+			instance.unmapRelaxedListener(SampleEventA.SOMETHING_HAPPENED, handlerThatShouldNotRun, SampleEventA);
+	    	eventDispatcher.dispatchEvent(new SampleEventA(SampleEventA.SOMETHING_HAPPENED));
+		}
+	
 		public function test_rememberEvent_stores_the_event():void {
 			instance.rememberEvent(SampleEventA.SOMETHING_HAPPENED, SampleEventA);
 	    	eventDispatcher.dispatchEvent(new SampleEventA(SampleEventA.SOMETHING_HAPPENED));
@@ -63,6 +70,9 @@ package org.robotlegs.base {
 			instance.mapRelaxedListener(SampleEventA.SOMETHING_HAPPENED, handler, SampleEventA);
 	    }
 	
+		/* not required - realised we need to keep the dummy listener throughout
+		for cases where the view is off stage for a while before returning
+		
 		public function test_rememberEvent_listener_is_cleaned_up():void { 
 		    instance.rememberEvent(SampleEventA.SOMETHING_HAPPENED, SampleEventA);
 	    	eventDispatcher.dispatchEvent(new SampleEventA(SampleEventA.SOMETHING_HAPPENED));
@@ -70,7 +80,7 @@ package org.robotlegs.base {
 	    	// unfortunately because the listener is by design empty, I can't find a way to test this automatically
 			// so it's a trace based confirmation
 			assertTrue("Manually verified that when a trace is placed in the null function used it doesn't trace", true);
-	    }
+	    }    */
 		
 		
 		private function somethingHappenedHandler(e:SampleEventA):void

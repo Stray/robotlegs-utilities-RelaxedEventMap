@@ -32,6 +32,11 @@ package org.robotlegs.base {
 			mapListener(this.eventDispatcher, type, listener, eventClass, useCapture, priority, useWeakReference);
 		}
 		
+		public function unmapRelaxedListener(type:String, listener:Function, eventClass:Class = null, useCapture:Boolean = false):void
+		{
+			unmapListener(this.eventDispatcher, type, listener, eventClass, useCapture);
+		}
+		
 		public function rememberEvent(type:String, eventClass:Class = null):void
 		{
 			var emptyListener:Function = function():void { }; 

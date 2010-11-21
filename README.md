@@ -69,6 +69,20 @@ Note that the parameters are similar to mapListener, but the dispatcher is alway
     }
        
 
-**Notes**
+**Clean up**
 
-In most other respects the RelaxedEventMap behaves just like the normal eventMap. The key difference is that there is only one RelaxedEventMap, where your individual mediators each have their own eventMap. If you need to de-register for the event when your view leaves the stage, override onRemove and use relaxedCommandMap.unmapListener manually.     
+In most other respects the RelaxedEventMap behaves just like the normal eventMap. The key difference is that there is only one RelaxedEventMap, where your individual mediators each have their own eventMap. If you need to de-register for the event when your view leaves the stage:
+
+	// in the mediator, override onRemove
+	public override function onRemove():void
+	{
+		relaxedEventMap.unmapRelaxedListener(SomeDataEvent.DATA_SET_UPDATED, handler, SomeDataEvent);
+	}
+
+
+**Warnings**
+
+Because the relaxedEventMap is shared across mediators, be very careful before using 'unmapListeners' (as inherited from EventMap) as this will remove *all* the listeners, including the dummy ones set up using rememberEvent.
+
+You could potentially still wish to use this approach in - for example - the clean-up of a module being unloaded from your application - hence it is still available, but should only be used with caution.
+  
