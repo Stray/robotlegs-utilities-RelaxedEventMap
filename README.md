@@ -73,10 +73,25 @@ Note that the parameters are similar to mapListener, but the dispatcher is alway
 
 In most other respects the RelaxedEventMap behaves just like the normal eventMap. The key difference is that there is only one RelaxedEventMap, where your individual mediators each have their own eventMap. If you need to de-register for the event when your view leaves the stage:
 
-	// in the mediator, override onRemove
-	public override function onRemove():void
+	// in the mediator, override preRemove
+	public override function preRemove():void
 	{
 		relaxedEventMap.unmapRelaxedListener(SomeDataEvent.DATA_SET_UPDATED, handler, SomeDataEvent);
+	}
+	
+	
+** Passing the owner mediator for easier cleanup **
+
+You can pass the mediator instance as an additional optional parameter when you mapRelaxedListener which then allows you to unmap all the listeners for that mediator (or object) in one go.
+
+	// pass the mediator 'this' as the ownerObject
+	relaxedEventMap.mapRelaxedListener(SomeDataEvent.DATA_SET_UPDATED, updatedHandler, SomeDataEvent, this);
+	relaxedEventMap.mapRelaxedListener(SomeDataEvent.DATA_SET_DELETED, deletedHandler, SomeDataEvent, this);    
+	
+	// remove all the listeners for this mediator in one go:
+	public override function preRemove():void
+	{
+		relaxedEventMap.unmapListenersFor(this);
 	}
 
 

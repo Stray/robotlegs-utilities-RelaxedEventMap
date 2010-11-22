@@ -34,7 +34,7 @@ package org.robotlegs.base {
 		}
 		
 		public function test_mapRelaxedListener_doesnt_error():void {
-			instance.mapRelaxedListener(SampleEventA.SOMETHING_HAPPENED, somethingHappenedHandler, SampleEventA, false, 0, true);
+			instance.mapRelaxedListener(SampleEventA.SOMETHING_HAPPENED, somethingHappenedHandler, SampleEventA, null, false, 0, true);
 			assertTrue("MapRelaxedListener didn't error", true);
 		}
 		
@@ -82,6 +82,22 @@ package org.robotlegs.base {
 			assertTrue("Manually verified that when a trace is placed in the null function used it doesn't trace", true);
 	    }    */
 		
+		public function test_unmapListenersFor_an_object_removes_correct_listeners():void {                    
+			var objectForRemovingSignals:Object = new Object();
+			var objectForKeepingSignals:Object = new Object();
+			
+			var asyncHandler:Function = addAsync(somethingHappenedHandler, 100);
+			
+			instance.mapRelaxedListener(SampleEventA.SOMETHING_HAPPENED, failIfFired, SampleEventA, objectForRemovingSignals);
+			instance.mapRelaxedListener(SampleEventA.SOMETHING_HAPPENED, alsoFailIfFired, SampleEventA, objectForRemovingSignals);
+			instance.mapRelaxedListener(SampleEventA.SOMETHING_HAPPENED, asyncHandler, SampleEventA, objectForKeepingSignals);
+		    
+			instance.unmapListenersFor(objectForRemovingSignals);
+		
+			eventDispatcher.dispatchEvent(new SampleEventA(SampleEventA.SOMETHING_HAPPENED));
+		}
+		
+		
 		
 		private function somethingHappenedHandler(e:SampleEventA):void
 		{
@@ -89,6 +105,11 @@ package org.robotlegs.base {
 		}
 		
 		private function failIfFired(e:Event = null):void
+		{
+			assertTrue("this event should not have fired!", false);
+		}
+		
+		private function alsoFailIfFired(e:Event = null):void
 		{
 			assertTrue("this event should not have fired!", false);
 		} 
